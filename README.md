@@ -1,430 +1,128 @@
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.sql.*;
-import java.util.Timer;
-import java.util.TimerTask;
+💻 Online Examination System (GUI Based)
 
-public class OnlineExamSystem {
+📘 Project Description
 
-    static Connection conn;
+The Online Examination System is a Java-based desktop application developed using Swing for the Graphical User Interface (GUI) and MySQL for backend database management.
+It is designed to automate and simplify the traditional examination process by providing a secure, efficient, and user-friendly platform for both students and administrators.
+The system allows students to log in, take multiple-choice exams, and instantly view their results. Administrators can add, edit, and manage questions, monitor exams, and analyze student performance.
+All information — including user details, exam questions, and results — is stored securely in a MySQL database using JDBC connectivity.
+To enhance integrity, the system can integrate AI-based proctoring features such as camera and microphone monitoring, ensuring fair and transparent examinations.
+This project demonstrates strong skills in Java GUI design, event-driven programming, and database integration, showcasing how technology can make education systems more digital and accessible.
 
-    public static void main(String[] args) {
-        connectDatabase();
-        SwingUtilities.invokeLater(() -> new LoginFrame());
-    }
 
-    public static void connectDatabase() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/onlineexam", "root", "MyNewPass123!");
-            System.out.println("Connected to DB!");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-}
+⚙️ Key Features
 
-// ---------------- LOGIN FRAME ----------------
-class LoginFrame extends JFrame {
-    JTextField txtUser;
-    JPasswordField txtPass;
-    JButton btnLogin, btnRegister;
+🔐 Secure Login System: Separate login access for administrators and students with password authentication.
 
-    public LoginFrame() {
-        setTitle("Online Exam Login");
-        setSize(450,300);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-        getContentPane().setBackground(new Color(230,240,255));
+🧑‍🏫 Admin Panel: Enables adding, editing, and managing exam questions and student details.
 
-        JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBackground(new Color(230,240,255));
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10,10,10,10);
+🎓 Student Dashboard: Allows students to take exams through an intuitive GUI and view instant results.
 
-        panel.add(new JLabel("Username:"), gbc);
-        txtUser = new JTextField(15);
-        gbc.gridx=1; panel.add(txtUser, gbc);
+⏰ Exam Timer: Built-in timer for automatic submission when the time limit expires.
 
-        gbc.gridx=0; gbc.gridy=1;
-        panel.add(new JLabel("Password:"), gbc);
-        txtPass = new JPasswordField(15);
-        gbc.gridx=1; panel.add(txtPass, gbc);
+✅ Automatic Evaluation: Instantly calculates scores and displays performance results.
 
-        btnLogin = new JButton("Login");
-        btnLogin.setBackground(new Color(100,180,255));
-        btnRegister = new JButton("Register");
-        btnRegister.setBackground(new Color(100,180,255));
+💾 Database Integration: All exam data is securely managed using MySQL and JDBC.
 
-        gbc.gridx=0; gbc.gridy=2; panel.add(btnLogin, gbc);
-        gbc.gridx=1; panel.add(btnRegister, gbc);
+📊 Instant Result Display: Shows marks, correct answers, and performance summary right after submission.
 
-        add(panel);
-        setVisible(true);
+🧠 AI-Based Proctoring (Optional): Uses camera/mic monitoring to detect and prevent cheating.
 
-        btnLogin.addActionListener(e -> login());
-        btnRegister.addActionListener(e -> new RegisterFrame());
-    }
+🖥️ User-Friendly Interface: Designed with Java Swing components for a clean and easy user experience.
 
-    private void login() {
-        String user = txtUser.getText();
-        String pass = new String(txtPass.getPassword());
-        try {
-            PreparedStatement ps = OnlineExamSystem.conn.prepareStatement(
-                "SELECT * FROM users WHERE username=? AND password=?");
-            ps.setString(1,user);
-            ps.setString(2,pass);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()) {
-                int userId = rs.getInt("id");
-                JOptionPane.showMessageDialog(this,"Login successful!");
-                dispose();
-                new InstructionsFrame(userId, user);
-            } else {
-                JOptionPane.showMessageDialog(this,"Invalid credentials.");
-            }
-        } catch(Exception ex){ ex.printStackTrace(); }
-    }
-}
+🧩 Scalable Architecture: Can be expanded to include more exam types, analytics, and reporting tools.
 
-// ---------------- REGISTRATION FRAME ----------------
-class RegisterFrame extends JFrame {
-    JTextField txtUser, txtEmail;
-    JPasswordField txtPass;
-    JButton btnReg;
-    public RegisterFrame() {
-        setTitle("Register New User");
-        setSize(450,350);
-        setLocationRelativeTo(null);
-        getContentPane().setBackground(new Color(230,240,255));
 
-        JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBackground(new Color(230,240,255));
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10,10,10,10);
+🧰 Technologies Used
 
-        panel.add(new JLabel("Username:"), gbc);
-        txtUser = new JTextField(15);
-        gbc.gridx=1; panel.add(txtUser, gbc);
+Programming Language: Java
+GUI Framework: Java Swing
+Database: MySQL
+Connectivity: JDBC (Java Database Connectivity)
+IDE Used: NetBeans / Eclipse / IntelliJ IDEA
+Additional Features: AI-based proctoring (camera & microphone integration)
 
-        gbc.gridx=0; gbc.gridy=1;
-        panel.add(new JLabel("Password:"), gbc);
-        txtPass = new JPasswordField(15);
-        gbc.gridx=1; panel.add(txtPass, gbc);
 
-        gbc.gridx=0; gbc.gridy=2;
-        panel.add(new JLabel("Email:"), gbc);
-        txtEmail = new JTextField(15);
-        gbc.gridx=1; panel.add(txtEmail, gbc);
+🎯 Learning Outcomes
 
-        btnReg = new JButton("Register");
-        btnReg.setBackground(new Color(100,180,255));
-        gbc.gridx=1; gbc.gridy=3; panel.add(btnReg, gbc);
+Strengthened understanding of Java programming and object-oriented design principles.
 
-        add(panel);
-        setVisible(true);
+Learned to create interactive GUI-based applications using Swing components.
 
-        btnReg.addActionListener(e -> register());
-    }
+Acquired hands-on experience with database connectivity (JDBC) and SQL operations.
 
-    private void register() {
-        try {
-            PreparedStatement ps = OnlineExamSystem.conn.prepareStatement(
-                "INSERT INTO users(username,password,email) VALUES(?,?,?)");
-            ps.setString(1,txtUser.getText());
-            ps.setString(2,new String(txtPass.getPassword()));
-            ps.setString(3,txtEmail.getText());
-            ps.executeUpdate();
-            JOptionPane.showMessageDialog(this,"Registration successful!");
-            dispose();
-        } catch(Exception e){ e.printStackTrace(); }
-    }
-}
+Improved debugging, logic-building, and problem-solving abilities.
 
-// ---------------- INSTRUCTIONS FRAME ----------------
-class InstructionsFrame extends JFrame {
-    JButton btnNext;
-    int userId;
-    String username;
-    public InstructionsFrame(int userId, String username) {
-        this.userId = userId;
-        this.username = username;
-        setTitle("Exam Instructions");
-        setSize(600,400);
-        setLocationRelativeTo(null);
-        getContentPane().setBackground(new Color(255,245,230));
+Explored integrating AI-based proctoring techniques for real-world exam monitoring
 
-        JTextArea instructions = new JTextArea(
-            "Exam Instructions:\n\n" +
-            "1. Exam duration: 20 minutes\n" +
-            "2. Total Questions: 20\n" +
-            "3. Each question has one correct answer\n" +
-            "4. Do not switch windows (AI proctoring active)\n" +
-            "5. Click Next to see Exam Pattern"
-        );
-        instructions.setEditable(false);
-        instructions.setFont(new Font("Arial", Font.PLAIN, 14));
-        instructions.setBackground(new Color(255,245,230));
+Understood event-driven programming, interface design, and data management concepts.
 
-        btnNext = new JButton("Next");
-        btnNext.setBackground(new Color(100,180,255));
-        btnNext.addActionListener(e -> {
-            dispose();
-            new ExamPatternFrame(userId, username);
-        });
+▶️ How to Run the Project
 
-        add(new JScrollPane(instructions), BorderLayout.CENTER);
-        add(btnNext, BorderLayout.SOUTH);
-        setVisible(true);
-    }
-}
+Follow these steps to set up and run the Online Examination System (GUI Based) on your computer:
 
-// ---------------- EXAM PATTERN FRAME ----------------
-class ExamPatternFrame extends JFrame {
-    JButton btnStartExam;
-    public ExamPatternFrame(int userId, String username) {
-        setTitle("Exam Pattern");
-        setSize(600,400);
-        setLocationRelativeTo(null);
-        getContentPane().setBackground(new Color(255,250,240));
-        setLayout(new BorderLayout());
+Install Required Software
 
-        JTextArea pattern = new JTextArea(
-            "Exam Pattern:\n\n" +
-            "- Total Questions: 20\n" +
-            "- Each question carries 1 mark\n" +
-            "- Duration: 20 minutes\n" +
-            "- Multiple Choice Questions only\n" +
-            "- Answers saved automatically\n" +
-            "- Score shown at end"
-        );
-        pattern.setFont(new Font("Arial", Font.PLAIN, 16));
-        pattern.setEditable(false);
-        pattern.setBackground(new Color(255,250,240));
-        add(pattern, BorderLayout.CENTER);
+Download and install JDK (Java Development Kit) — version 8 or higher.
 
-        btnStartExam = new JButton("Start Exam");
-        btnStartExam.setBackground(new Color(100,180,255));
-        add(btnStartExam, BorderLayout.SOUTH);
+Install an IDE such as NetBeans, Eclipse, or IntelliJ IDEA.
 
-        btnStartExam.addActionListener(e -> {
-            dispose();
-            new ExamFrame(userId, username);
-        });
+Install MySQL Server and MySQL Workbench for database management.
 
-        setVisible(true);
-    }
-}
+Set Up the Database
 
-// ---------------- EXAM FRAME ----------------
-class ExamFrame extends JFrame {
-    JLabel lblTimer, lblQuestion;
-    Timer timer;
-    int timeLeft = 20 * 60; // 20 min
-    JButton btnNext, btnSubmit;
-    int userId;
-    String username;
-    int qIndex = 0;
-    int totalQuestions = 20;
-    int[] userAnswers = new int[20];
 
-    ButtonGroup bg = new ButtonGroup();
-    JRadioButton[] rbOptions = new JRadioButton[4];
-    int[] questionIds = new int[20];
+Open MySQL Workbench.
 
-    public ExamFrame(int userId, String username) {
-        this.userId = userId;
-        this.username = username;
-        setTitle("Online Exam");
-        setSize(800,500);
-        setLocationRelativeTo(null);
-        getContentPane().setBackground(new Color(230,240,255));
-        setLayout(new BorderLayout());
+Create a new database (for example: online_exam).
 
-        lblTimer = new JLabel("Time: 20:00");
-        lblTimer.setFont(new Font("Arial",Font.BOLD,16));
-        add(lblTimer, BorderLayout.NORTH);
+Import or execute the provided database.sql file to create the necessary tables.
 
-        JPanel questionPanel = new JPanel(new GridLayout(5,1));
-        questionPanel.setBackground(new Color(255,255,240));
-        lblQuestion = new JLabel();
-        questionPanel.add(lblQuestion);
+Make sure to note your database username and password.
 
-        for(int i=0;i<4;i++){
-            rbOptions[i] = new JRadioButton();
-            rbOptions[i].setBackground(new Color(255,255,240));
-            rbOptions[i].setFont(new Font("Arial", Font.PLAIN, 14));
-            bg.add(rbOptions[i]);
-            questionPanel.add(rbOptions[i]);
-        }
+Configure Database Connection
 
-        add(questionPanel, BorderLayout.CENTER);
+Open the project in your IDE.
 
-        JPanel btnPanel = new JPanel();
-        btnPanel.setBackground(new Color(230,240,255));
-        btnNext = new JButton("Next");
-        btnNext.setBackground(new Color(100,180,255));
-        btnSubmit = new JButton("Submit");
-        btnSubmit.setBackground(new Color(100,180,255));
-        btnPanel.add(btnNext);
-        btnPanel.add(btnSubmit);
-        add(btnPanel, BorderLayout.SOUTH);
+In the Java source files, locate the database connection code (usually using DriverManager.getConnection() in JDBC).
 
-        btnNext.addActionListener(e -> nextQuestion());
-        btnSubmit.addActionListener(e -> submitExam());
+Update the URL, username, and password to match your MySQL configuration, for example:
 
-        loadQuestions();
-        displayQuestion();
-        startTimer();
-        setVisible(true);
-    }
+Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/online_exam", "root", "your_password");
 
-    private void loadQuestions() {
-        try {
-            PreparedStatement ps = OnlineExamSystem.conn.prepareStatement(
-                "SELECT * FROM questions LIMIT 20");
-            ResultSet rs = ps.executeQuery();
-            int i=0;
-            while(rs.next()) {
-                questionIds[i] = rs.getInt("id");
-                i++;
-            }
-        } catch(Exception e){ e.printStackTrace(); }
-    }
+Compile and Run the Project
 
-    private void displayQuestion() {
-        try {
-            PreparedStatement ps = OnlineExamSystem.conn.prepareStatement(
-                "SELECT * FROM questions LIMIT 1 OFFSET ?");
-            ps.setInt(1,qIndex);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()) {
-                lblQuestion.setText((qIndex+1) + ". " + rs.getString("question_text"));
-                rbOptions[0].setText(rs.getString("option1"));
-                rbOptions[1].setText(rs.getString("option2"));
-                rbOptions[2].setText(rs.getString("option3"));
-                rbOptions[3].setText(rs.getString("option4"));
-            }
-        } catch(Exception e){ e.printStackTrace(); }
-    }
+Open your IDE and build the project to resolve dependencies.
 
-    private void nextQuestion() {
-        for(int i=0;i<4;i++){
-            if(rbOptions[i].isSelected()){
-                userAnswers[qIndex] = i+1;
-                bg.clearSelection();
-                break;
-            }
-        }
-        qIndex++;
-        if(qIndex>=totalQuestions){
-            JOptionPane.showMessageDialog(this,"Last question reached");
-            qIndex = totalQuestions-1;
-        }
-        displayQuestion();
-    }
+Run the main Java file (e.g., OnlineExamMain.java or LoginPage.java).
 
-    private void submitExam() {
-        timer.cancel();
-        int correct = 0;
-        try {
-            for(int i=0;i<totalQuestions;i++){
-                PreparedStatement ps = OnlineExamSystem.conn.prepareStatement(
-                    "INSERT INTO user_answers(user_id,question_id,selected_option) VALUES(?,?,?)");
-                ps.setInt(1,userId);
-                ps.setInt(2,questionIds[i]);
-                ps.setInt(3,userAnswers[i]);
-                ps.executeUpdate();
+The login interface will appear — you can log in as:
 
-                PreparedStatement ps2 = OnlineExamSystem.conn.prepareStatement(
-                    "SELECT correct_option FROM questions WHERE id=?");
-                ps2.setInt(1,questionIds[i]);
-                ResultSet rs = ps2.executeQuery();
-                if(rs.next() && userAnswers[i]==rs.getInt("correct_option")){
-                    correct++;
-                }
-            }
-        } catch(Exception e){ e.printStackTrace(); }
+Admin to add or manage questions.
 
-        dispose();
-        new ResultFrame(username, correct, totalQuestions);
-    }
+Student to attempt exams.
 
-    private void startTimer() {
-        timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask(){
-            public void run() {
-                int min = timeLeft / 60;
-                int sec = timeLeft % 60;
-                lblTimer.setText(String.format("Time: %02d:%02d", min, sec));
-                timeLeft--;
-                if(timeLeft<0){
-                    timer.cancel();
-                    submitExam();
-                }
-            }
-        },1000,1000);
-    }
-}
+Test the Application
 
-// ---------------- RESULT FRAME WITH PIE CHART ----------------
-class ResultFrame extends JFrame {
-    public ResultFrame(String username, int correct, int total) {
-        setTitle("Exam Results for " + username);
-        setSize(500,450);
-        setLocationRelativeTo(null);
-        setLayout(new BorderLayout());
-        getContentPane().setBackground(new Color(255,255,240));
+Add a few sample questions via the Admin Panel.
 
-        add(new PieChartPanel(correct, total), BorderLayout.CENTER);
+Log in as a student to attempt the exam.
 
-        JButton btnDownload = new JButton("Download Result");
-        btnDownload.setBackground(new Color(100,180,255));
-        add(btnDownload, BorderLayout.SOUTH);
-        btnDownload.addActionListener(e -> JOptionPane.showMessageDialog(this,
-            "Result downloaded successfully!\nScore: " + correct + "/" + total));
+Check the automatic evaluation and result generation features.
 
-        setVisible(true);
-    }
-}
+(Optional) Enable AI-Based Proctoring
 
-// ---------------- CUSTOM PIE CHART PANEL ----------------
-class PieChartPanel extends JPanel {
-    int correct, total;
+Integrate webcam and microphone modules (if implemented).
 
-    public PieChartPanel(int correct, int total) {
-        this.correct = correct;
-        this.total = total;
-        setPreferredSize(new Dimension(400,400));
-        setBackground(new Color(255,255,240));
-    }
+Grant camera/mic permissions when running the application.
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        int width = getWidth();
-        int height = getHeight();
-        Graphics2D g2 = (Graphics2D) g;
 
-        // calculate angles
-        double correctAngle = ((double)correct/total) * 360;
-        double wrongAngle = 360 - correctAngle;
+✅ Output
 
-        // draw correct slice
-        g2.setColor(new Color(100,220,100));
-        g2.fillArc(50, 50, 300, 300, 0, (int)correctAngle);
+Login window for Admin and Student
 
-        // draw wrong slice
-        g2.setColor(new Color(220,100,100));
-        g2.fillArc(50, 50, 300, 300, (int)correctAngle, (int)wrongAngle);
+Question interface with timer
 
-        // draw labels
-        g2.setColor(Color.BLACK);
-        g2.setFont(new Font("Arial", Font.BOLD, 16));
-        g2.drawString("Correct: " + correct, 50, 370);
-        g2.drawString("Incorrect: " + (total - correct), 250, 370);
-    }
-}
+Result display after exam submission
 
+Database showing stored user details, questions, and scores
